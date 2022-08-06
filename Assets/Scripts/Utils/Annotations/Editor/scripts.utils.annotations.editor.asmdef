@@ -1,0 +1,22 @@
+{
+    "name": "scripts.utils.annotations.editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:acf588755d1ab9f47adf6b6f3e858593",
+        "GUID:343deaaf83e0cee4ca978e7df0b80d21",
+        "GUID:d5ef535524e94888a1395fab6202fa9f"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_EDITOR"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
