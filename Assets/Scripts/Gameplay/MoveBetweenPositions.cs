@@ -14,7 +14,7 @@ namespace Scripts.Gameplay
 
         [SerializeField] private PositionNode posB;
 
-        [SerializeField] [Utils.Annotations.ReadOnly] private MoveStatesEnum theMoveState;
+        [SerializeField] private MoveStatesEnum theMoveState;
 
         [SerializeField] [Utils.Annotations.ReadOnly]
         private float moveTimeSeconds = 5;
@@ -22,10 +22,15 @@ namespace Scripts.Gameplay
         [SerializeField] [Utils.Annotations.ReadOnly]
         private float movePerSecond = 0.2f;
 
-        [SerializeField] [Utils.Annotations.ReadOnly]
+        [SerializeField]
         private float moveDist = 1f;
 
-        public void DoTheMove(MoveStatesEnum moveToDo, float duration = default)
+        private void Awake()
+        {
+            DoTheMoving();
+        }
+
+        public void ChangeMoveState(MoveStatesEnum moveToDo, float duration = default)
         {
             duration = duration.ReLU();
             if (Mathf.Approximately(duration, 0f))
@@ -81,6 +86,11 @@ namespace Scripts.Gameplay
 
             moveDist = Mathf.Clamp01(moveDist + (movePerSecond * Time.deltaTime));
             
+            DoTheMoving();
+        }
+
+        private void DoTheMoving()
+        {
             thingThatMovesBetweenPositions.transform.position = Vector3.Lerp(
                 StartPos,
                 EndPos,
@@ -98,9 +108,6 @@ namespace Scripts.Gameplay
                     _ => theMoveState
                 };
             }
-
-
-
         }
 
         private Vector3 StartPos => theMoveState switch
@@ -136,6 +143,11 @@ namespace Scripts.Gameplay
                 posA.Position,
                 posB.Position
             );
+        }
+
+        private void OnValidate()
+        {
+            DoTheMoving();
         }
     }
 

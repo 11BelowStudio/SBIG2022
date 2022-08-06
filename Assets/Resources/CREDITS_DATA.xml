@@ -92,6 +92,12 @@ For example:
         <from>https://assetstore.unity.com/packages/3d/environments/sci-fi/snaps-prototype-sci-fi-industrial-136759</from>
         <license>Standard Unity Asset Store EULA</license>
     </asset>
+    <asset>
+        <assetname>Pillow</assetname>
+        <author>khanhnguyen1189</author>
+        <from>https://sketchfab.com/3d-models/pillow-ffedc1b62f8d485bb19392c6d33fb71d</from>
+        <license>CC-BY-4.0</license>
+    </asset>
 </assets>
 <licenses>
 <!--
