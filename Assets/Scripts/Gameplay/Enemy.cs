@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Scripts.Utils.Annotations;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Scripts.Gameplay
 {
@@ -27,6 +28,7 @@ namespace Scripts.Gameplay
 
         public IReadOnlyList<EnemyPositionStruct> Positions => _positions;
 
+        private float NextMoveEventTimer => Random.Range(minTimeForMoveAttempt, maxTimeForMoveAttempt);
 
         public int MyCurrentPosition
         {
@@ -42,12 +44,17 @@ namespace Scripts.Gameplay
 
                 _myCurrentPosition = value;
                 myEnemyPosition = _positions[value];
+
+                transform.position = myEnemyPosition.theNode.Position;
+
+                // ReSharper disable once Unity.InefficientPropertyAccess
+                transform.rotation = myEnemyPosition.theNode.transform.rotation;
             }
         }
         
         [SerializeField] private int _myCurrentPosition = 0;
 
-        [SerializeField] [Utils.Annotations.ReadOnly] private EnemyPositionStruct myEnemyPosition;
+        [SerializeField] [ReadOnly] private EnemyPositionStruct myEnemyPosition;
 
 
         public static event Action<EnemyEnum> StartThisEnemy;
@@ -66,7 +73,11 @@ namespace Scripts.Gameplay
             CameraManager.Instance.OnCameraActiveStateChanged += AmIBeingWatched;
 
         }
-        
+
+        private void OnValidate()
+        {
+            MyCurrentPosition = _myCurrentPosition;
+        }
 
         private void ShouldIStart(EnemyEnum enemyToStart)
         {
