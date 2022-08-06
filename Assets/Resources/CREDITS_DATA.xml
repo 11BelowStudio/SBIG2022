@@ -74,6 +74,24 @@ For example:
 <from>https://pnghut.com/png/ZHHUsNZAz4/</from>
 <license>???</license>
 </asset>
+    <asset>
+        <assetname>DevTex: Prototyping Textures</assetname>
+        <author>GIB Games</author>
+        <from>https://assetstore.unity.com/packages/2d/textures-materials/devtex-prototyping-textures-176107</from>
+        <license>Standard Unity Asset Store EULA</license>
+    </asset>
+    <asset>
+        <assetname>Snaps Prototype | Office</assetname>
+        <author>Unity Technologies</author>
+        <from>https://assetstore.unity.com/packages/3d/environments/snaps-prototype-office-137490</from>
+        <license>Standard Unity Asset Store EULA</license>
+    </asset>
+    <asset>
+        <assetname>Snaps Prototype | Sci-Fi / Industrial</assetname>
+        <author>Unity Technologies</author>
+        <from>https://assetstore.unity.com/packages/3d/environments/sci-fi/snaps-prototype-sci-fi-industrial-136759</from>
+        <license>Standard Unity Asset Store EULA</license>
+    </asset>
 </assets>
 <licenses>
 <!--
