@@ -67,6 +67,44 @@ namespace Scripts.Gameplay
 
             OnActiveCameraChanged?.Invoke(newCam);
         }
-        
+
+        private void Update()
+        {
+            if (_camState == CameraState.ACTIVE)
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    CameraButtonPressed(CameraEnum.A);
+                } 
+                else if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    CameraButtonPressed(CameraEnum.B);
+                } 
+                else if (Input.GetKeyDown(KeyCode.Alpha3))
+                {
+                    CameraButtonPressed(CameraEnum.C);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha4))
+                {
+                    CameraButtonPressed(CameraEnum.D);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha5))
+                {
+                    CameraButtonPressed(CameraEnum.E);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha6))
+                {
+                    CameraButtonPressed(CameraEnum.F);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha7))
+                {
+                    CameraButtonPressed(CameraEnum.G);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha8))
+                {
+                    CameraButtonPressed(CameraEnum.BRI_AIN);
+                }
+            }
+        }
     }
 }

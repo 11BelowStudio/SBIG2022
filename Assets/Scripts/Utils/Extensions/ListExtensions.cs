@@ -73,6 +73,21 @@ namespace Scripts.Utils.Extensions
                 return null;
             }
 
+            public static bool TryFindInList<T>(this IList<T> theList, Predicate<T> condition, out T result) where T : class
+            {
+                foreach (var item in theList)
+                {
+                    if (condition(item))
+                    {
+                        result = item;
+                        return true;
+                    }
+                }
+
+                result = null;
+                return false;
+            }
+
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using Scripts.Utils.Extensions.ListExt;
+using UnityEngine;
 
 namespace Scripts.Gameplay
 {
@@ -24,12 +26,21 @@ namespace Scripts.Gameplay
 
             Gizmos.color = WhoseNodeIsThis.ToColour();
             
-            Gizmos.DrawSphere(transform.position, 1f);
+            Gizmos.DrawWireSphere(transform.position, 1f);
 
             Gizmos.color = oldColor;
         }
 
-        
-        
+        private void OnValidate()
+        {
+            if (ShouldIFaceCamera)
+            {
+                if (FindObjectsOfType<RoomCamera>().TryFindInList(rc => rc.IsThisMyCam(_whereIs), out RoomCamera lookAtThis))
+                {
+                    transform.LookAt(lookAtThis.transform.position);
+                }
+                
+            }
+        }
     }
 }

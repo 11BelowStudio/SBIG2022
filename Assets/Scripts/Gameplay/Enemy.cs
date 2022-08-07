@@ -54,10 +54,14 @@ namespace Scripts.Gameplay
         
         [SerializeField] private int _myCurrentPosition = 0;
 
+        [SerializeField] private int EsiotrotAttackPos = -1;
+
         [SerializeField] [ReadOnly] private EnemyPositionStruct myEnemyPosition;
 
 
         public static event Action<EnemyEnum> StartThisEnemy;
+
+        public event Action<bool> OnBeingWatchedChanged;
 
 
         [SerializeField][Unity.Collections.ReadOnly]
@@ -99,6 +103,8 @@ namespace Scripts.Gameplay
             _isBeingWatched =
                 CameraManager.Instance.AreCamsActive &&
                 myEnemyPosition.theNode.IsThisMyCam(CameraManager.Instance.CurrentCamera);
+            
+            OnBeingWatchedChanged?.Invoke(_isBeingWatched);
         }
         
 
@@ -124,8 +130,11 @@ namespace Scripts.Gameplay
         private void OnDestroy()
         {
             StartThisEnemy -= ShouldIStart;
-            CameraManager.Instance.OnActiveCameraChanged -= AmIBeingWatched;
-            CameraManager.Instance.OnCameraActiveStateChanged -= AmIBeingWatched;
+            if (CameraManager.TryGetInstance(out CameraManager theCamManager))
+            {
+                theCamManager.OnActiveCameraChanged -= AmIBeingWatched;
+                theCamManager.OnCameraActiveStateChanged -= AmIBeingWatched;
+            }
         }
 
         private void OnDrawGizmosSelected()
@@ -137,6 +146,7 @@ namespace Scripts.Gameplay
                 pos.theNode.OnDrawGizmos();
                 
                 Gizmos.DrawLine(pos.theNode.Position, _positions[pos.nextPos].theNode.Position);
+                
 
                 if (pos.isAttackPos)
                 {

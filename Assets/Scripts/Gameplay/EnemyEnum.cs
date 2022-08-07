@@ -9,7 +9,8 @@ namespace Scripts.Gameplay
         TORTELVIS,
         ESIO_TROT,
         KEIN,
-        TESTUDO
+        TESTUDO,
+        IDENTIKIT
     }
 
     public static class EnemyEnumMethods
@@ -23,6 +24,7 @@ namespace Scripts.Gameplay
                 EnemyEnum.TESTUDO => Color.red,
                 EnemyEnum.ESIO_TROT => Color.green,
                 EnemyEnum.KEIN => Color.blue,
+                EnemyEnum.IDENTIKIT => Color.cyan,
                 _ => Color.magenta
             };
         }

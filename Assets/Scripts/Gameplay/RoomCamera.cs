@@ -24,8 +24,11 @@ namespace Scripts.Gameplay
 
         private void OnDestroy()
         {
-            CameraManager.Instance.OnActiveCameraChanged -= OnActiveCameraChanged;
-            CameraManager.Instance.OnCameraActiveStateChanged -= OnCameraActiveStateChanged;
+            if (CameraManager.TryGetInstance(out var theCamManager))
+            {
+                theCamManager.OnActiveCameraChanged -= OnActiveCameraChanged;
+                theCamManager.OnCameraActiveStateChanged -= OnCameraActiveStateChanged;
+            }
         }
 
         private void Start()
