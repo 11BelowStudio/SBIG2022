@@ -21,7 +21,7 @@ namespace Scripts.Gameplay
 
         public float patience;
 
-        public float DisturbancePerSecond;
+        public float DisturbancePerSecond = 1;
 
         [SerializeField] [ReadOnly] private float moveAttemptDelta;
 
@@ -45,12 +45,12 @@ namespace Scripts.Gameplay
                 }
 
                 _myCurrentPosition = value;
-                myEnemyPosition = _positions[value];
+                myActualPosition = _positions[value];
 
-                transform.position = myEnemyPosition.theNode.Position;
+                transform.position = myActualPosition.theNode.Position;
 
                 // ReSharper disable once Unity.InefficientPropertyAccess
-                transform.rotation = myEnemyPosition.theNode.transform.rotation;
+                transform.rotation = myActualPosition.theNode.transform.rotation;
             }
         }
         
@@ -58,12 +58,14 @@ namespace Scripts.Gameplay
 
         [SerializeField] private int EsiotrotAttackPos = -1;
 
-        [SerializeField][ReadOnly] private int EsiotrotNextStartPos = 1;
+        [SerializeField][ReadOnly] private int _esiotrotNextStartPos = 1;
 
-        [SerializeField] [ReadOnly] private EnemyPositionStruct myEnemyPosition;
+        [SerializeField] [ReadOnly] private EnemyPositionStruct myActualPosition;
 
 
         public static event Action<EnemyEnum> StartThisEnemy;
+
+        public static event Action<EnemyEnum, float> UpdateEnemyAILevel;
 
         public event Action<bool> OnBeingWatchedChanged;
 
@@ -75,10 +77,13 @@ namespace Scripts.Gameplay
         private void Awake()
         {
             StartThisEnemy += ShouldIStart;
+            UpdateEnemyAILevel += ShouldIUpdateMyAiLevel;
             MyCurrentPosition = 0;
 
             CameraManager.Instance.OnActiveCameraChanged += AmIBeingWatched;
             CameraManager.Instance.OnCameraActiveStateChanged += AmIBeingWatched;
+
+            GameManager.Instance.DoorIsClosedGoAwayGrr += DoorHasJustBeenClosed;
 
         }
 
@@ -96,6 +101,24 @@ namespace Scripts.Gameplay
             }
         }
 
+        private void ShouldIUpdateMyAiLevel(EnemyEnum enemyToUpdate, float newAilevel)
+        {
+            if (enemyToUpdate == whoIs)
+            {
+                AILevel = newAilevel;
+            }
+        }
+
+        public static void PleaseToStartThisEnemy(EnemyEnum e)
+        {
+            StartThisEnemy?.Invoke(e);
+        }
+        
+        public static void PleaseToUpdateThisEnemyAi(EnemyEnum e, float newAi)
+        {
+            UpdateEnemyAILevel?.Invoke(e, newAi);
+        }
+
         private void StartAI()
         {
             moveAttemptDelta = NextMoveEventTimer;
@@ -107,7 +130,7 @@ namespace Scripts.Gameplay
         {
             _isBeingWatched =
                 CameraManager.Instance.AreCamsActive &&
-                myEnemyPosition.theNode.IsThisMyCam(CameraManager.Instance.CurrentCamera);
+                myActualPosition.theNode.IsThisMyCam(CameraManager.Instance.CurrentCamera);
             
             OnBeingWatchedChanged?.Invoke(_isBeingWatched);
         }
@@ -121,26 +144,72 @@ namespace Scripts.Gameplay
                 return;
             }
 
-            moveAttemptDelta -= Time.deltaTime;
-            if (moveAttemptDelta <= 0f)
+            if (myActualPosition.isAttackPos)
             {
-                moveAttemptDelta = NextMoveEventTimer;
+                Debug.Log($"Enemy {name} is attacking!");
+                GameManager.Instance.DisturbanceLevel += (DisturbancePerSecond * Time.deltaTime);
+            }
+            else if (!PauseCountdownForKein)
+            {
 
-                if ((!_isBeingWatched) && Random.value <= AILevel)
+                moveAttemptDelta -= Time.deltaTime;
+                if (moveAttemptDelta <= 0f)
                 {
-                    
+                    moveAttemptDelta = NextMoveEventTimer;
+
+                    if ((!_isBeingWatched) && Random.value <= AILevel)
+                    {
+                        MoveAttemptSucceeded();
+                    }
                 }
             }
 
         }
+
+        private void MoveAttemptSucceeded(int overridePos = -1)
+        {
+            MyCurrentPosition = (overridePos == -1) ? myActualPosition.nextPos : overridePos;
+
+            if (myActualPosition.isAttackPos && GameManager.Instance.ControlState == ControlStateEnum.DOOR_CLOSED)
+            {
+                DoorHasJustBeenClosed();
+            }
+        }
+
+        private void DoorHasJustBeenClosed()
+        {
+            if (IsAttacking)
+            {
+                // If door got closed on the enemy whilst attacking, get sent off
+                if (whoIs == EnemyEnum.ESIO_TROT)
+                {
+                    // The esiotrot doesn't get sent back as far on repeat attempts.
+                    MoveAttemptSucceeded(_esiotrotNextStartPos);
+
+                    if (_esiotrotNextStartPos < Positions.Count - 2)
+                    {
+                        _esiotrotNextStartPos++;
+                    }
+                    
+                }
+                else
+                {
+                    MoveAttemptSucceeded();
+                }
+            }
+        }
+
+        public bool IsAttacking => myActualPosition.isAttackPos;
 
 
         private void KeinUpdate()
         {
             
         }
-        
-        
+
+        private bool PauseCountdownForKein => (whoIs == EnemyEnum.KEIN) && CameraManager.Instance.AreCamsActive;
+
+
 
         private void OnDestroy()
         {

@@ -19,14 +19,26 @@ namespace Scripts.Menu
 
         [SerializeField] private Button showCreditsButton;
 
+        [SerializeField] private Button instructionsPopupButton;
+
         private void Awake()
         {
-            startGameButton.onClick.AddListener(GamerTime);
+            startGameButton.onClick.AddListener(ShowInstructionsPopup);
+            instructionsPopupButton.onClick.AddListener(GamerTime);
             showCreditsButton.onClick.AddListener(ShowCredits);
+            
+            instructionsPopupButton.gameObject.SetActive(false);
             
             theCredits.HideMe();
             entireCanvasGroupForTheWholeMenu.alpha = 1f;
             entireCanvasGroupForTheWholeMenu.interactable = true;
+        }
+
+        private void ShowInstructionsPopup()
+        {
+            mainMenuCanvasGroup.interactable = false;
+            mainMenuCanvasGroup.alpha = 0f;
+            instructionsPopupButton.gameObject.SetActive(true);
         }
 
         private void GamerTime()
