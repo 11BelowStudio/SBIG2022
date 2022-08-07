@@ -105,6 +105,30 @@ sci-fi/snaps-prototype-sci-fi-industrial-136759</from>
 pillow-ffedc1b62f8d485bb19392c6d33fb71d</from>
         <license>CC-BY-4.0</license>
     </asset>
+    <asset>
+        <assetname>[FREE] Ancient Rome Trap Beat - Julius Caesar Type Beat *HARD*</assetname>
+        <author>prod. Stefan</author>
+        <from>https://www.youtube.com/watch?v=fsZic5DCRUk</from>
+        <license>Non-profit use with attribution is allowed</license>
+    </asset>
+    <asset>
+        <assetname>roomtone</assetname>
+        <author>Mydo1</author>
+        <from>https://freesound.org/people/Mydo1/sounds/198957/</from>
+        <license>CC-0 (public domain)</license>
+    </asset>
+    <asset>
+        <assetname>Plate Armor- Rustle 3</assetname>
+        <author>Samulis</author>
+        <from>https://freesound.org/people/Samulis/sounds/209400/</from>
+        <license>CC-BY-3.0</license>
+    </asset>
+    <asset>
+        <assetname>Carefree</assetname>
+        <author>Kevin MacLeod (Incompetech.com)</author>
+        <from>https://incompetech.com/music/royalty-free/music.html</from>
+        <license>CC-BY-4.0</license>
+    </asset>
 </assets>
 <licenses>
 <!--
@@ -146,7 +170,18 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 For other bits of credits that don't neatly fit in elsewhere.
 -->
 <other>
+Developed using Unity 2020.3.37f1
+</other>
+<other>
 Featuring Tortelvis as himself
+(via a few samples from Dread Zeppelin - Black Dog and Dread Zeppelin - Stir It Up)
+</other>
+<other>
+This is totally not a ripoff of One Night At Flumpty's 2. no bamboozle.
+</other>
+<other>
+This game was made entirely during the weekend of the 6th-7th of august,
+and the cheap energy drinks at tesco are surprisingly potent.
 </other>
 </others>
 </credits_data>

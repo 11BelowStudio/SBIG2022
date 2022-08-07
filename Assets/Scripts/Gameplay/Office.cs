@@ -27,6 +27,10 @@ namespace Scripts.Gameplay
         [SerializeField] private Quaternion faceDoorQuaternion = Quaternion.Euler(0, 180, 0);
         [SerializeField] private  Quaternion faceBehindQuaternion = Quaternion.Euler(0, 0, 0);
 
+        public AudioSource doorAudioSource;
+
+        public AudioClip doorClosedAudioClip;
+
 
         private void Awake()
         {
@@ -38,12 +42,20 @@ namespace Scripts.Gameplay
             camManager.OnCameraActiveStateChanged += OnCameraStateChanged;
             gameManager.OnControlStateChangedOldNew += OnControlStateChanged;
 
+            gameManager.GameFinishedOneShot += GameFinishedYeahhhh;
+
             tortoiseHUD = FindObjectOfType<OfficeTortoiseHUD>();
             inGameHud = FindObjectOfType<OfficeInGameHUD>();
             doorHUD = FindObjectOfType<OfficeDoorHUD>();
             
             tortoiseHUD.HideMe();
             doorHUD.HideMe();
+        }
+
+        private void GameFinishedYeahhhh()
+        {
+            DoorMover.ChangeMoveState(MoveStatesEnum.AT_A);
+            PCMover.ChangeMoveState(MoveStatesEnum.AT_A);
         }
 
         private void OnCameraStateChanged(CameraState camState)
@@ -73,6 +85,7 @@ namespace Scripts.Gameplay
                             break; // redundant I think. unless I notify OfficeInGameHUD here
                         case ControlStateEnum.DOOR_CLOSED:
                             DoorMover.ChangeMoveState(MoveStatesEnum.A_TO_B, 0.25f);
+                            doorAudioSource.PlayOneShot(doorClosedAudioClip);
                             break;
                         case ControlStateEnum.LOOKING_BACK:
                             doorHUD.HideMe();
@@ -120,6 +133,7 @@ namespace Scripts.Gameplay
                             break;
                         case ControlStateEnum.DOOR_CLOSED:
                             DoorMover.ChangeMoveState(MoveStatesEnum.A_TO_B, 0.25f);
+                            doorAudioSource.PlayOneShot(doorClosedAudioClip);
                             break;
                         default:
                             // redundant?

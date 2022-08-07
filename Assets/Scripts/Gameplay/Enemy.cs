@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Scripts.Utils.Annotations;
+using Scripts.Utils.Extensions.ListExt;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -31,6 +32,12 @@ namespace Scripts.Gameplay
         public IReadOnlyList<EnemyPositionStruct> Positions => _positions;
 
         private float NextMoveEventTimer => Random.Range(minTimeForMoveAttempt, maxTimeForMoveAttempt);
+
+        [SerializeField] private List<AudioClip> _moveClips = new List<AudioClip>();
+
+        [SerializeField] private AudioClip _attackAudio;
+
+        [SerializeField] private AudioSource myAudioSource;
 
         public int MyCurrentPosition
         {
@@ -84,6 +91,7 @@ namespace Scripts.Gameplay
             CameraManager.Instance.OnCameraActiveStateChanged += AmIBeingWatched;
 
             GameManager.Instance.DoorIsClosedGoAwayGrr += DoorHasJustBeenClosed;
+            GameManager.Instance.GameFinishedOneShot += StopAI;
 
         }
 
@@ -134,6 +142,17 @@ namespace Scripts.Gameplay
             
             OnBeingWatchedChanged?.Invoke(_isBeingWatched);
         }
+
+        private void StopAI()
+        {
+            
+            if (whoIs != EnemyEnum.IDENTIKIT)
+            {
+                isStarted = false;
+                MyCurrentPosition = 0;
+                gameObject.SetActive(false);
+            }
+        }
         
 
 
@@ -170,9 +189,39 @@ namespace Scripts.Gameplay
         {
             MyCurrentPosition = (overridePos == -1) ? myActualPosition.nextPos : overridePos;
 
-            if (myActualPosition.isAttackPos && GameManager.Instance.ControlState == ControlStateEnum.DOOR_CLOSED)
+            if (myActualPosition.isAttackPos)
             {
-                DoorHasJustBeenClosed();
+                if (GameManager.Instance.ControlState == ControlStateEnum.DOOR_CLOSED)
+                {
+                    DoorHasJustBeenClosed();
+                }
+                else
+                {
+                    if (_attackAudio != null)
+                    {
+                        myAudioSource.clip = _attackAudio;
+                        myAudioSource.loop = true;
+                        myAudioSource.Play();
+                    }
+                }
+            }
+            else
+            {
+                if (_moveClips.Count > 0)
+                {
+                    if (_moveClips.Count == 1)
+                    {
+                        myAudioSource.PlayOneShot(_moveClips[0]);
+                    }
+                    else
+                    {
+                        myAudioSource.PlayOneShot(
+                            _moveClips.SwapTheseTwoAndGet(
+                                Random.Range(1, _moveClips.Count)
+                            )
+                        );
+                    }
+                }
             }
         }
 
@@ -180,6 +229,7 @@ namespace Scripts.Gameplay
         {
             if (IsAttacking)
             {
+                myAudioSource.Stop();
                 // If door got closed on the enemy whilst attacking, get sent off
                 if (whoIs == EnemyEnum.ESIO_TROT)
                 {

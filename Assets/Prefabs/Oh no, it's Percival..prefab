@@ -43,7 +43,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -142,4 +142,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   percivalAudioSource: {fileID: 7498875020118047993}
   percivalIntroAudioClip: {fileID: 8300000, guid: d2d5d90d95558df428ef03de6dcc4b4c, type: 3}
-  percivalMusic: []
+  percivalIntros:
+  - {fileID: 8300000, guid: 211239de1d9081f48ba571587753200f, type: 3}
+  - {fileID: 8300000, guid: 033b0927d823bcc44a18e00523bbabf9, type: 3}
+  - {fileID: 8300000, guid: 52d8ac6f7ccfddc4d9cca6e2488c9e9b, type: 3}
+  percivalMusic:
+  - {fileID: 8300000, guid: ab24987419526cf4a84083b099f00a6a, type: 3}
+  - {fileID: 8300000, guid: f4960e579863cbd4c8433c5a1ff5de1a, type: 3}
+  - {fileID: 8300000, guid: f8bc927de10dc8c4ab8dee524d4b6105, type: 3}
+  _percivalDisturbance: 1
+  minPercivalDelay: 10
+  maxPercivalDelay: 25
+  percivalDelayRemaining: 0
+  isPercivalAllowedToAppear: 0
+  isFirstShutUp: 1

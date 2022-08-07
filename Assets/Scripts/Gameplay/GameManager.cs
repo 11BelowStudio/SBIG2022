@@ -31,7 +31,9 @@ namespace Scripts.Gameplay
 
         [SerializeField] private float _currentDisturbance = 0f;
 
-        public event Action OnNoiseLimitReachedGameOverOneShot;
+        public event Action GameFinishedOneShot;
+
+        public event Action NoiseLimitReachedGameOverOneShot;
 
         [SerializeField] private ControlStateEnum _controlState;
 
@@ -48,7 +50,24 @@ namespace Scripts.Gameplay
         public event Action OnOutOfCameraPower;
 
         public TheSourceOfPercival percivalSource;
+
+        public GameObject Kevin;
         
+        public GameObject KevinDestination;
+
+        public PositionNode BanishmentPosition;
+
+        public AudioClip kevinWarpInNoise;
+
+        public AudioSource myAudioSource;
+
+        public AudioClip kevinWarpsYouNoise;
+
+        public AudioClip badEndMusic;
+
+        public AudioClip goodEndMusic;
+
+        public float gameDurationSeconds = 600f;
 
         public float CameraPowerLevel
         {
@@ -105,13 +124,72 @@ namespace Scripts.Gameplay
 
                 if (gameIsRunning && value >= _noiseLimit)
                 {
-                    OnNoiseLimitReachedGameOverOneShot?.Invoke();
-                    OnNoiseLimitReachedGameOverOneShot = null;
-                    gameIsRunning = false;
-                    ControlState = ControlStateEnum.DED;
+                    GameIsOver(false);
                 }
             }
         }
+
+
+        private void GameIsOver(bool won)
+        {
+            GameFinishedOneShot?.Invoke();
+            GameFinishedOneShot = null;
+            gameIsRunning = false;
+            ControlState = ControlStateEnum.DED;
+            
+            
+            if (won)
+            {
+                StartCoroutine(WonCoroutine());
+            }
+            else
+            {
+                StartCoroutine(LostCoroutine());
+            }
+        }
+
+        private IEnumerator WonCoroutine()
+        {
+            yield return new WaitForSeconds(3f);
+            Kevin.transform.position = KevinDestination.transform.position;
+            
+            myAudioSource.PlayOneShot(kevinWarpInNoise);
+            yield return new WaitForSeconds(3f);
+            myAudioSource.clip = goodEndMusic;
+            myAudioSource.loop = true;
+            myAudioSource.Play();
+            FindObjectOfType<GameOverHUD>().GoodEnding();
+        }
+        
+        private IEnumerator LostCoroutine()
+        {
+            yield return new WaitForSeconds(3f);
+            Kevin.transform.position = KevinDestination.transform.position;
+            myAudioSource.PlayOneShot(kevinWarpInNoise);
+
+            yield return new WaitForSeconds(3f);
+            myAudioSource.PlayOneShot(kevinWarpsYouNoise);
+            yield return new WaitForSeconds(0.961f);
+            // ReSharper disable once PossibleNullReferenceException
+            Camera.main.transform.position = BanishmentPosition.Position;
+            Camera.main.fieldOfView = 60f;
+            yield return new WaitForSeconds(3f);
+            myAudioSource.clip = badEndMusic;
+            myAudioSource.loop = true;
+            myAudioSource.Play();
+            FindObjectOfType<GameOverHUD>().BadEnding();
+        }
+
+        private IEnumerator GameTimerCoroutine()
+        {
+            yield return new WaitForSeconds(gameDurationSeconds);
+            if (gameIsRunning)
+            {
+                // congrats u win
+                GameIsOver(true);
+            }
+        }
+        
 
         public float DisturbanceLevel01
         {
@@ -129,6 +207,7 @@ namespace Scripts.Gameplay
             percivalSource.PlayIntroMonologue();
 
             StartCoroutine(EnemyStarterCoroutine());
+            StartCoroutine(GameTimerCoroutine());
         }
 
         private IEnumerator EnemyStarterCoroutine()
