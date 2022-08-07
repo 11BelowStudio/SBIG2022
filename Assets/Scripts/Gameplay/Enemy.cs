@@ -15,11 +15,13 @@ namespace Scripts.Gameplay
 
         public float maxTimeForMoveAttempt = 5f;
 
-        public float AILevel;
+        public float AILevel = 0.1f;
 
         public bool isStarted = false;
 
         public float patience;
+
+        public float DisturbancePerSecond;
 
         [SerializeField] [ReadOnly] private float moveAttemptDelta;
 
@@ -55,6 +57,8 @@ namespace Scripts.Gameplay
         [SerializeField] private int _myCurrentPosition = 0;
 
         [SerializeField] private int EsiotrotAttackPos = -1;
+
+        [SerializeField][ReadOnly] private int EsiotrotNextStartPos = 1;
 
         [SerializeField] [ReadOnly] private EnemyPositionStruct myEnemyPosition;
 
@@ -94,6 +98,7 @@ namespace Scripts.Gameplay
 
         private void StartAI()
         {
+            moveAttemptDelta = NextMoveEventTimer;
             isStarted = true;
         }
 
@@ -115,8 +120,18 @@ namespace Scripts.Gameplay
             {
                 return;
             }
-            
-            
+
+            moveAttemptDelta -= Time.deltaTime;
+            if (moveAttemptDelta <= 0f)
+            {
+                moveAttemptDelta = NextMoveEventTimer;
+
+                if ((!_isBeingWatched) && Random.value <= AILevel)
+                {
+                    
+                }
+            }
+
         }
 
 

@@ -22,6 +22,14 @@ namespace Scripts.Gameplay
 
         public event Action<EnemyEnum, EnemyPositionStruct> OnEnemyMoved;
 
+        public event Action DoorIsClosedGoAwayGrr;
+
+        public bool gameIsRunning = false;
+
+        public void ItsGamerTime()
+        {
+            gameIsRunning = true;
+        }
 
         private void Awake()
         {
@@ -65,7 +73,14 @@ namespace Scripts.Gameplay
                 
             }
             
-            
+        }
+
+        void Update()
+        {
+            if (!gameIsRunning)
+            {
+                return;
+            }
         }
     }
 

@@ -22,7 +22,8 @@ turns into <br> when read
 -->
 <credits>
 <credit>
-This game was developed by Rachel Lowe
+This game was developed by 11BelowStudio
+for the So Bad It's Good Jam 2022
 </credit>
 </credits>
 <assets>
@@ -47,7 +48,8 @@ For example:
 <asset>
 <assetname>Tortoise - Turtle</assetname>
 <author>Daniel Zuleta Art</author>
-<from>https://sketchfab.com/3d-models/tortoise-turtle-031b140380654dedb3b18e7cdd8c190c</from>
+<from>https://sketchfab.com/3d-models/ 
+tortoise-turtle-031b140380654dedb3b18e7cdd8c190c</from>
 <license>CC-BY-4.0</license>
 </asset>
 <asset>
@@ -65,7 +67,8 @@ For example:
 <asset>
 <assetname>Dead Turtle Table</assetname>
 <author>Duznot</author>
-<from>https://sketchfab.com/3d-models/dead-turtle-table-854313a3ea1d4e6184b33e4b91b333e9</from>
+<from>https://sketchfab.com/3d-models/
+dead-turtle-table-854313a3ea1d4e6184b33e4b91b333e9</from>
 <license>CC-BY-4.0</license>
 </asset>
 <asset>
@@ -77,25 +80,29 @@ For example:
     <asset>
         <assetname>DevTex: Prototyping Textures</assetname>
         <author>GIB Games</author>
-        <from>https://assetstore.unity.com/packages/2d/textures-materials/devtex-prototyping-textures-176107</from>
+        <from>https://assetstore.unity.com/packages/2d/textures-materials/
+devtex-prototyping-textures-176107</from>
         <license>Standard Unity Asset Store EULA</license>
     </asset>
     <asset>
         <assetname>Snaps Prototype | Office</assetname>
         <author>Unity Technologies</author>
-        <from>https://assetstore.unity.com/packages/3d/environments/snaps-prototype-office-137490</from>
+        <from>https://assetstore.unity.com/packages/3d/environments/
+snaps-prototype-office-137490</from>
         <license>Standard Unity Asset Store EULA</license>
     </asset>
     <asset>
         <assetname>Snaps Prototype | Sci-Fi / Industrial</assetname>
         <author>Unity Technologies</author>
-        <from>https://assetstore.unity.com/packages/3d/environments/sci-fi/snaps-prototype-sci-fi-industrial-136759</from>
+        <from>https://assetstore.unity.com/packages/3d/environments/
+sci-fi/snaps-prototype-sci-fi-industrial-136759</from>
         <license>Standard Unity Asset Store EULA</license>
     </asset>
     <asset>
         <assetname>Pillow</assetname>
         <author>khanhnguyen1189</author>
-        <from>https://sketchfab.com/3d-models/pillow-ffedc1b62f8d485bb19392c6d33fb71d</from>
+        <from>https://sketchfab.com/3d-models/
+pillow-ffedc1b62f8d485bb19392c6d33fb71d</from>
         <license>CC-BY-4.0</license>
     </asset>
 </assets>

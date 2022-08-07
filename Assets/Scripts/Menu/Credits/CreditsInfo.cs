@@ -2,6 +2,7 @@
 
 using System.Collections;
 using System.Xml;
+using Scripts.Menu;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -22,7 +23,7 @@ namespace Scripts.MainMenuStuff.Credits
         /// The main menu itself
         ///</summary>
         //[Tooltip("The main menu itself")]
-        //public MainMenuRunner theMainMenu;
+        public MainMenu theMainMenu;
 
 
         ///<summary>
@@ -90,16 +91,20 @@ namespace Scripts.MainMenuStuff.Credits
 
         private Coroutine _loadingCoroutine;
 
+        public CanvasGroup myCanvasGroup;
+
         // Start is called before the first frame update
-        void Start()
+        void Awake()
         {
-            //if (theMainMenu == null){
-            //    theMainMenu = FindObjectOfType<MainMenuRunner>();
-            //}
+            if (theMainMenu == null){
+                theMainMenu = FindObjectOfType<MainMenu>();
+            }
             
             backButton.onClick.AddListener(
                 BackToMainMenu
             );
+
+            myCanvasGroup = GetComponent<CanvasGroup>();
 
             _loadingCoroutine = null;
         }
@@ -222,7 +227,8 @@ namespace Scripts.MainMenuStuff.Credits
         public void BackToMainMenu(){
             if (_loadingCoroutine == null)
             {
-                //theMainMenu.CreditsToMain();
+                HideMe();
+                theMainMenu.BackToMainMenu();
             }
         }
 
