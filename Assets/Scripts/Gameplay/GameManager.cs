@@ -7,6 +7,9 @@ using Scripts.Utils.Extensions.ListExt;
 using UnityEngine;
 using Scripts.Utils.Types;
 using Scripts.Utils.Annotations;
+using TMPro;
+using UnityEngine.SceneManagement;
+
 namespace Scripts.Gameplay
 {
     public class GameManager: Singleton<GameManager>
@@ -26,6 +29,10 @@ namespace Scripts.Gameplay
         public event Action DoorIsClosedGoAwayGrr;
 
         public bool gameIsRunning = false;
+
+        public bool gameHasStarted = false;
+
+        private bool allowedToQuit = true;
 
         [SerializeField] private float _noiseLimit = 10f;
 
@@ -68,6 +75,16 @@ namespace Scripts.Gameplay
         public AudioClip goodEndMusic;
 
         public float gameDurationSeconds = 600f;
+
+        private bool _endlessMode = false;
+
+        public bool EndlessMode => _endlessMode;
+
+        public TextMeshProUGUI endlessModeTextDisplay;
+        
+        private const string K_ENDLESS_HIGH_SCORE = "K_ENDLESS_HIGH_SCORE";
+
+        private float currentEndlessScore = 0;
 
         public float CameraPowerLevel
         {
@@ -132,10 +149,16 @@ namespace Scripts.Gameplay
 
         private void GameIsOver(bool won)
         {
+            allowedToQuit = false;
             GameFinishedOneShot?.Invoke();
             GameFinishedOneShot = null;
             gameIsRunning = false;
             ControlState = ControlStateEnum.DED;
+
+            if (_endlessMode && currentEndlessScore > PlayerPrefs.GetFloat(K_ENDLESS_HIGH_SCORE, 0f))
+            {
+                PlayerPrefs.SetFloat(K_ENDLESS_HIGH_SCORE, currentEndlessScore);
+            }
             
             
             if (won)
@@ -158,7 +181,11 @@ namespace Scripts.Gameplay
             myAudioSource.clip = goodEndMusic;
             myAudioSource.loop = true;
             myAudioSource.Play();
-            FindObjectOfType<GameOverHUD>().GoodEnding();
+            var gameOverHud = FindObjectOfType<GameOverHUD>();
+            gameOverHud.GoodEnding();
+            yield return new WaitForSeconds(3f);
+            gameOverHud.ShowPlayAgainButton();
+            allowedToQuit = true;
         }
         
         private IEnumerator LostCoroutine()
@@ -173,11 +200,15 @@ namespace Scripts.Gameplay
             // ReSharper disable once PossibleNullReferenceException
             Camera.main.transform.position = BanishmentPosition.Position;
             Camera.main.fieldOfView = 60f;
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(1f);
             myAudioSource.clip = badEndMusic;
             myAudioSource.loop = true;
             myAudioSource.Play();
-            FindObjectOfType<GameOverHUD>().BadEnding();
+            var gameOverHud = FindObjectOfType<GameOverHUD>();
+            gameOverHud.BadEnding();
+            yield return new WaitForSeconds(12.5f);
+            gameOverHud.ShowPlayAgainButton();
+            allowedToQuit = true;
         }
 
         private IEnumerator GameTimerCoroutine()
@@ -198,31 +229,43 @@ namespace Scripts.Gameplay
         }
         
         public event Action<float> OnDisturbanceLevelChanged01;
-        
-        
+
+        public void EnableEndlessMode()
+        {
+            _endlessMode = true;
+            currentEndlessScore = 0f;
+            endlessModeTextDisplay.gameObject.SetActive(true);
+            endlessModeTextDisplay.text = $"Score: {currentEndlessScore:f}";
+        }
 
         public void ItsGamerTime()
         {
             gameIsRunning = true;
+            gameHasStarted = true;
             percivalSource.PlayIntroMonologue();
 
             StartCoroutine(EnemyStarterCoroutine());
-            StartCoroutine(GameTimerCoroutine());
+            if (!_endlessMode)
+            {
+                endlessModeTextDisplay.gameObject.SetActive(false);
+                StartCoroutine(GameTimerCoroutine());
+            }
         }
 
         private IEnumerator EnemyStarterCoroutine()
         {
             Enemy.PleaseToStartThisEnemy(EnemyEnum.TORTELVIS);
-            yield return new WaitForSeconds(15f);
+            yield return new WaitForSeconds(10f);
             Enemy.PleaseToStartThisEnemy(EnemyEnum.ESIO_TROT);
+            yield return new WaitForSeconds(10f);
             Enemy.PleaseToStartThisEnemy(EnemyEnum.TESTUDO);
-            yield return new WaitForSeconds(15f);
+            yield return new WaitForSeconds(10f);
             Enemy.PleaseToStartThisEnemy(EnemyEnum.KEIN);
             yield return new WaitForSeconds(5f);
             Enemy.PleaseToStartThisEnemy(EnemyEnum.IDENTIKIT);
-            Enemy.PleaseToUpdateThisEnemyAi(EnemyEnum.TORTELVIS, 0.2f);
         }
 
+        
         private void Awake()
         {
             if (!_AttemptToRegisterInstance)
@@ -231,8 +274,21 @@ namespace Scripts.Gameplay
                 return;
             }
 
+            gameHasStarted = false;
             camManager = CameraManager.Instance;
             percivalSource = FindObjectOfType<TheSourceOfPercival>();
+
+            if (PlayerPrefs.HasKey(K_ENDLESS_HIGH_SCORE))
+            {
+                endlessModeTextDisplay.gameObject.SetActive(true);
+                endlessModeTextDisplay.text =
+                    $"Endless mode high score: {PlayerPrefs.GetFloat(K_ENDLESS_HIGH_SCORE):F}";
+            }
+            else
+            {
+                endlessModeTextDisplay.gameObject.SetActive(false);
+            }
+            
         }
 
 
@@ -272,6 +328,29 @@ namespace Scripts.Gameplay
 
         void Update()
         {
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (gameHasStarted)
+                {
+                    if (allowedToQuit)
+                    {
+                        SceneManager.LoadScene(0);
+                        return;
+                    }
+                }
+                else
+                {
+                    #if UNITY_WEBGL
+                    SceneManager.LoadScene(0);
+                    #else
+                    Application.Quit();
+                    #endif
+                    return;
+                }
+            }
+            
+            
             if (!gameIsRunning)
             {
                 return;
@@ -330,6 +409,12 @@ namespace Scripts.Gameplay
                         RechargeCamThisFrame();
                     }
                     break;
+            }
+
+            if (EndlessMode)
+            {
+                currentEndlessScore += Time.deltaTime/60;
+                endlessModeTextDisplay.text = $"Score: {currentEndlessScore:F}";
             }
         }
 

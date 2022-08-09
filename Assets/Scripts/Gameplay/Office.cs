@@ -31,6 +31,11 @@ namespace Scripts.Gameplay
 
         public AudioClip doorClosedAudioClip;
 
+        public AudioSource screenAudioSource;
+        
+        public AudioClip camsBeHere;
+
+        public AudioClip camsBeGone;
 
         private void Awake()
         {
@@ -64,9 +69,11 @@ namespace Scripts.Gameplay
             {
                 case CameraState.ACTIVE:
                     PCMover.ChangeMoveState(MoveStatesEnum.A_TO_B, 0.5f);
+                    screenAudioSource.PlayOneShot(camsBeHere);
                     break;
                 case CameraState.INACTIVE:
                     PCMover.ChangeMoveState(MoveStatesEnum.B_TO_A, 0.5f);
+                    screenAudioSource.PlayOneShot(camsBeGone);
                     break;
             }
         }

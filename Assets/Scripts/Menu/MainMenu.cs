@@ -21,11 +21,14 @@ namespace Scripts.Menu
 
         [SerializeField] private Button instructionsPopupButton;
 
+        [SerializeField] private Button endlessModeButton;
+
         private void Awake()
         {
             startGameButton.onClick.AddListener(ShowInstructionsPopup);
             instructionsPopupButton.onClick.AddListener(GamerTime);
             showCreditsButton.onClick.AddListener(ShowCredits);
+            endlessModeButton.onClick.AddListener(EndlessGamerTime);
             
             instructionsPopupButton.gameObject.SetActive(false);
             
@@ -47,6 +50,12 @@ namespace Scripts.Menu
             entireCanvasGroupForTheWholeMenu.interactable = false;
             entireCanvasGroupForTheWholeMenu.gameObject.SetActive(false);
             GameManager.Instance.ItsGamerTime();
+        }
+
+        private void EndlessGamerTime()
+        {
+            GameManager.Instance.EnableEndlessMode();
+            ShowInstructionsPopup();
         }
 
         private void ShowCredits()

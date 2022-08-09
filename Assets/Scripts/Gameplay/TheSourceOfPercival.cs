@@ -27,7 +27,7 @@ namespace Scripts.Gameplay
         [SerializeField] private float _percivalDisturbance = 0.5f;
 
 
-        [SerializeField] private float minPercivalDelay = 5f;
+        [SerializeField] private float minPercivalDelay = 10f;
 
         [SerializeField] private float maxPercivalDelay = 20f;
 
@@ -68,6 +68,7 @@ namespace Scripts.Gameplay
             isPercivalAllowedToAppear = true;
             percivalDelayRemaining = PercivalDelay;
             isFirstShutUp = false;
+            _percivalAudioCoroutine = null;
         }
 
         public bool IsPercivalStillTalking => percivalAudioSource.isPlaying;
@@ -112,6 +113,17 @@ namespace Scripts.Gameplay
         {
             _percivalAudioCoroutine = StartCoroutine(PercivalAudioCoroutine());
             _thingThatTellsPercivalToShutUp.PercivalHasStartedSingingAgain();
+        }
+
+        public void TheIdendikitHasMoved()
+        {
+            if (minPercivalDelay > 1f)
+            {
+                minPercivalDelay -= 1f;
+            } else if (maxPercivalDelay > 10f)
+            {
+                maxPercivalDelay -= 0.5f;
+            }
         }
 
         private IEnumerator PercivalAudioCoroutine()

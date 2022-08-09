@@ -39,6 +39,8 @@ namespace Scripts.Gameplay
 
         [SerializeField] private AudioSource myAudioSource;
 
+        [SerializeField] private List<int> PossibleStartPositionsForTheTestudoAndKein = new List<int>(new int[]{0,0});
+
         public int MyCurrentPosition
         {
             get => _myCurrentPosition;
@@ -80,9 +82,14 @@ namespace Scripts.Gameplay
         [SerializeField][Unity.Collections.ReadOnly]
         private bool _isBeingWatched = false;
 
+        private List<Enemy> allEnemies = new List<Enemy>();
+
 
         private void Awake()
         {
+
+            allEnemies = new List<Enemy>(FindObjectsOfType<Enemy>());
+            
             StartThisEnemy += ShouldIStart;
             UpdateEnemyAILevel += ShouldIUpdateMyAiLevel;
             MyCurrentPosition = 0;
@@ -133,13 +140,20 @@ namespace Scripts.Gameplay
             isStarted = true;
         }
 
-
         private void AmIBeingWatched<T>(T _ = default)
         {
-            _isBeingWatched =
-                CameraManager.Instance.AreCamsActive &&
-                myActualPosition.theNode.IsThisMyCam(CameraManager.Instance.CurrentCamera);
-            
+            if (myActualPosition.CamEnum == CameraEnum.OFFICE)
+            {
+                _isBeingWatched = (GameManager.Instance.ControlState == ControlStateEnum.AT_DOOR);
+            }
+            else
+            {
+
+                _isBeingWatched =
+                    CameraManager.Instance.AreCamsActive &&
+                    myActualPosition.theNode.IsThisMyCam(CameraManager.Instance.CurrentCamera);
+                
+            }
             OnBeingWatchedChanged?.Invoke(_isBeingWatched);
         }
 
@@ -168,7 +182,7 @@ namespace Scripts.Gameplay
                 Debug.Log($"Enemy {name} is attacking!");
                 GameManager.Instance.DisturbanceLevel += (DisturbancePerSecond * Time.deltaTime);
             }
-            else if (!PauseCountdownForKein)
+            else if (!PauseCountdownForKeinOrIdendikit)
             {
 
                 moveAttemptDelta -= Time.deltaTime;
@@ -187,7 +201,24 @@ namespace Scripts.Gameplay
 
         private void MoveAttemptSucceeded(int overridePos = -1)
         {
+            
+            if (whoIs == EnemyEnum.IDENTIKIT)
+            {
+                Debug.Log("The identikit has moved, increasing enemy AI levels!!!!!");
+                foreach (var en in allEnemies)
+                {
+                    if (en.whoIs != EnemyEnum.IDENTIKIT && en.AILevel < 0.9f)
+                    {
+                        en.AILevel += 0.1f;
+                    }
+                }
+                FindObjectOfType<TheSourceOfPercival>().TheIdendikitHasMoved();
+            }
+            
             MyCurrentPosition = (overridePos == -1) ? myActualPosition.nextPos : overridePos;
+
+            
+            
 
             if (myActualPosition.isAttackPos)
             {
@@ -231,21 +262,34 @@ namespace Scripts.Gameplay
             {
                 myAudioSource.Stop();
                 // If door got closed on the enemy whilst attacking, get sent off
-                if (whoIs == EnemyEnum.ESIO_TROT)
-                {
-                    // The esiotrot doesn't get sent back as far on repeat attempts.
-                    MoveAttemptSucceeded(_esiotrotNextStartPos);
 
-                    if (_esiotrotNextStartPos < Positions.Count - 2)
-                    {
-                        _esiotrotNextStartPos++;
-                    }
-                    
-                }
-                else
+
+                switch (whoIs)
                 {
-                    MoveAttemptSucceeded();
+                    case EnemyEnum.ESIO_TROT:
+                        // The esiotrot doesn't get sent back as far on repeat attempts.
+                        MoveAttemptSucceeded(_esiotrotNextStartPos);
+
+                        if (_esiotrotNextStartPos < Positions.Count - 2)
+                        {
+                            _esiotrotNextStartPos++;
+                        }
+                        break;
+                    case EnemyEnum.TESTUDO:
+                    case EnemyEnum.KEIN:
+                        // the testudo will attempt a different route (and ke'in might start a bit closer)
+                        MoveAttemptSucceeded(
+                            PossibleStartPositionsForTheTestudoAndKein.SwapTheseTwoAndGet(
+                                Random.Range(0, PossibleStartPositionsForTheTestudoAndKein.Count)
+                            )
+                        );
+                        break;
+                    default:
+                        // everyone else (tortelvis) just goes back to the start.
+                        MoveAttemptSucceeded();
+                        break;
                 }
+                
             }
         }
 
@@ -257,8 +301,14 @@ namespace Scripts.Gameplay
             
         }
 
-        private bool PauseCountdownForKein => (whoIs == EnemyEnum.KEIN) && CameraManager.Instance.AreCamsActive;
 
+        private bool PauseCountdownForKeinOrIdendikit => whoIs switch
+        {
+            EnemyEnum.KEIN => CameraManager.Instance.AreCamsActive,
+            EnemyEnum.IDENTIKIT => myActualPosition.CamEnum == CameraEnum.OFFICE &&
+                                   GameManager.Instance.ControlState == ControlStateEnum.AT_DOOR,
+            _ => false
+        };
 
 
         private void OnDestroy()

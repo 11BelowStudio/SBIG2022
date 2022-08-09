@@ -23,6 +23,8 @@ namespace Scripts.Gameplay
             gameOverHudCanvasGroup.interactable = false;
             gameOverHudCanvasGroup.alpha = 0f;
             
+            playAgainButton.gameObject.SetActive(false);
+            
             playAgainButton.onClick.AddListener(PlayAgain);
         }
 
@@ -31,6 +33,11 @@ namespace Scripts.Gameplay
             badEndingHud.gameObject.SetActive(true);
             gameOverHudCanvasGroup.interactable = true;
             gameOverHudCanvasGroup.alpha = 1f;
+        }
+
+        public void ShowPlayAgainButton()
+        {
+            playAgainButton.gameObject.SetActive(true);
         }
 
         public void GoodEnding()

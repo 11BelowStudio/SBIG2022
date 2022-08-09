@@ -24,6 +24,10 @@ namespace Scripts.Gameplay
 
         public RenderTexture theRenderTexture;
 
+        public AudioClip cameraChangedClip;
+
+        public AudioSource cameraChangeAudioSource;
+
         private void Awake()
         {
             
@@ -64,7 +68,10 @@ namespace Scripts.Gameplay
         {
             var oldCam = _currentCam;
             _currentCam = newCam;
-
+            if (oldCam != newCam)
+            {
+                cameraChangeAudioSource.PlayOneShot(cameraChangedClip);
+            }
             OnActiveCameraChanged?.Invoke(newCam);
         }
 
