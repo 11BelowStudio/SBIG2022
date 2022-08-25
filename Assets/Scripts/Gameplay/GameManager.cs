@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
+using Scripts.Menu;
 using Scripts.Utils.Extensions.ListExt;
 using UnityEngine;
 using Scripts.Utils.Types;
@@ -15,7 +15,10 @@ namespace Scripts.Gameplay
     public class GameManager: Singleton<GameManager>
     {
 
-        public CameraManager camManager;
+        [SerializeField] private CameraManager camManager;
+        [SerializeField] private ControllerInputListener controllerInput;
+
+        [SerializeField] private MainMenu theMainMenu;
 
         private Dictionary<CameraEnum, RoomStruct> _rooms = new Dictionary<CameraEnum, RoomStruct>();
 
@@ -26,7 +29,7 @@ namespace Scripts.Gameplay
 
         public event Action<EnemyEnum, EnemyPositionStruct> OnEnemyMoved;
 
-        public event Action DoorIsClosedGoAwayGrr;
+        public event Action? DoorIsClosedGoAwayGrr;
 
         public bool gameIsRunning = false;
 
@@ -37,8 +40,14 @@ namespace Scripts.Gameplay
         [SerializeField] private float _noiseLimit = 10f;
 
         [SerializeField] private float _currentDisturbance = 0f;
+        
+        #if UNITY_EDITOR
+        [SerializeField] [ReadOnly] private float timeSinceGameStarted = 0f;
+        #endif
 
-        public event Action GameFinishedOneShot;
+        public event Action? GameFinishedOneShot;
+
+        [SerializeField] private OfficeTortoiseHUD _officeTortoiseHUD;
 
         public event Action NoiseLimitReachedGameOverOneShot;
 
@@ -52,9 +61,9 @@ namespace Scripts.Gameplay
 
         [SerializeField] [ReadOnly] private float _cameraPowerLevel = 1f;
 
-        public event Action<float> OnCameraPowerLevelChanged;
+        public event Action<float>? OnCameraPowerLevelChanged;
 
-        public event Action OnOutOfCameraPower;
+        public event Action? OnOutOfCameraPower;
 
         public TheSourceOfPercival percivalSource;
 
@@ -84,7 +93,15 @@ namespace Scripts.Gameplay
         
         private const string K_ENDLESS_HIGH_SCORE = "K_ENDLESS_HIGH_SCORE";
 
+        private const string K_VERSION_INDICATOR = "K_VERSION_INDICATOR";
+
         private float currentEndlessScore = 0;
+
+        public void ScaleTheDisturbanceBarToPunishCampers(float scaleBy)
+        {
+            _noiseLimit *= scaleBy;
+            DisturbanceLevel *= scaleBy;
+        }
 
         public float CameraPowerLevel
         {
@@ -155,12 +172,17 @@ namespace Scripts.Gameplay
             gameIsRunning = false;
             ControlState = ControlStateEnum.DED;
 
-            if (_endlessMode && currentEndlessScore > PlayerPrefs.GetFloat(K_ENDLESS_HIGH_SCORE, 0f))
+            if (_endlessMode)
             {
-                PlayerPrefs.SetFloat(K_ENDLESS_HIGH_SCORE, currentEndlessScore);
+                if (currentEndlessScore > PlayerPrefs.GetFloat(K_ENDLESS_HIGH_SCORE, 0f) 
+                    || PlayerPrefs.GetString(K_VERSION_INDICATOR, "") != Application.version)
+                {
+                    PlayerPrefs.SetFloat(K_ENDLESS_HIGH_SCORE, currentEndlessScore);
+                    PlayerPrefs.SetString(K_VERSION_INDICATOR, Application.version);
+                }
             }
-            
-            
+
+
             if (won)
             {
                 StartCoroutine(WonCoroutine());
@@ -256,18 +278,41 @@ namespace Scripts.Gameplay
         {
             Enemy.PleaseToStartThisEnemy(EnemyEnum.TORTELVIS);
             yield return new WaitForSeconds(10f);
-            Enemy.PleaseToStartThisEnemy(EnemyEnum.ESIO_TROT);
+            Enemy.PleaseToStartThisEnemy(EnemyEnum.ESIOTROT);
             yield return new WaitForSeconds(10f);
             Enemy.PleaseToStartThisEnemy(EnemyEnum.TESTUDO);
             yield return new WaitForSeconds(10f);
             Enemy.PleaseToStartThisEnemy(EnemyEnum.KEIN);
-            yield return new WaitForSeconds(5f);
-            Enemy.PleaseToStartThisEnemy(EnemyEnum.IDENTIKIT);
+            yield return new WaitForSeconds(10f);
+            Enemy.PleaseToStartThisEnemy(EnemyEnum.INTRUDER);
+            yield return new WaitForSeconds(20f);
+            Enemy.PleaseToIncrementThisEnemyAI(EnemyEnum.TORTELVIS, 0.0125f);
+            Enemy.PleaseToIncrementThisEnemyAI(EnemyEnum.TESTUDO, 0.0125f);
+            Enemy.PleaseToIncrementThisEnemyAI(EnemyEnum.KEIN, 0.0125f);
+            yield return new WaitForSeconds(60f);
+            Enemy.PleaseToIncrementThisEnemyAI(EnemyEnum.TORTELVIS, 0.0125f);
+            Enemy.PleaseToIncrementThisEnemyAI(EnemyEnum.TESTUDO, 0.0125f);
+            Enemy.PleaseToIncrementThisEnemyAI(EnemyEnum.KEIN, 0.0125f);
+            Enemy.PleaseToIncrementThisEnemyAI(EnemyEnum.INTRUDER, 0.0125f);
+            while (gameIsRunning)
+            {
+                yield return new WaitForSeconds(75f);
+                if (gameIsRunning)
+                {
+                    Enemy.PleaseToIncrementThisEnemyAI(EnemyEnum.TORTELVIS, 0.025f);
+                    Enemy.PleaseToIncrementThisEnemyAI(EnemyEnum.TESTUDO, 0.025f);
+                    Enemy.PleaseToIncrementThisEnemyAI(EnemyEnum.KEIN, 0.025f);
+                    Enemy.PleaseToIncrementThisEnemyAI(EnemyEnum.INTRUDER, 0.0125f);
+                }
+            }
         }
 
         
         private void Awake()
         {
+
+            
+            
             if (!_AttemptToRegisterInstance)
             {
                 Destroy(this);
@@ -276,13 +321,32 @@ namespace Scripts.Gameplay
 
             gameHasStarted = false;
             camManager = CameraManager.Instance;
+            controllerInput = ControllerInputListener.Instance;
+            theMainMenu = FindObjectOfType<MainMenu>();
             percivalSource = FindObjectOfType<TheSourceOfPercival>();
+            _officeTortoiseHUD = FindObjectOfType<OfficeTortoiseHUD>();
 
             if (PlayerPrefs.HasKey(K_ENDLESS_HIGH_SCORE))
             {
                 endlessModeTextDisplay.gameObject.SetActive(true);
+
+                string endlessModeVersionSuffix = "";
+                
+                if (PlayerPrefs.HasKey(K_VERSION_INDICATOR))
+                {
+                    var highScoreVersion = PlayerPrefs.GetString(K_VERSION_INDICATOR, "ERROR");
+                    if (Application.version != highScoreVersion)
+                    {
+                        endlessModeVersionSuffix = $" (on v{K_VERSION_INDICATOR})";
+                    }
+                }
+                else
+                {
+                    endlessModeVersionSuffix = " (on an old game version)";
+                }
+                
                 endlessModeTextDisplay.text =
-                    $"Endless mode high score: {PlayerPrefs.GetFloat(K_ENDLESS_HIGH_SCORE):F}";
+                    $"Endless mode high score: {PlayerPrefs.GetFloat(K_ENDLESS_HIGH_SCORE):F}{endlessModeVersionSuffix}";
             }
             else
             {
@@ -325,36 +389,64 @@ namespace Scripts.Gameplay
             }
             
         }
+        
+        private bool WasQuitInput()
+        {
+
+            if (Input.GetButtonDown("quit"))
+            {
+                return true;
+            }
+
+            if (Input.GetButtonDown("joystickBack"))
+            {
+                if (gameIsRunning || theMainMenu.IsShowingCredits)
+                {
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        private void DoTheQuitting()
+        {
+            if (gameHasStarted)
+            {
+                if (allowedToQuit)
+                {
+                    SceneManager.LoadScene(0);
+                    return;
+                }
+            }
+            else
+            {
+#if UNITY_WEBGL
+                SceneManager.LoadScene(0);
+#else
+                    Application.Quit();
+#endif
+                return;
+            }
+        }
 
         void Update()
         {
 
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (WasQuitInput())
             {
-                if (gameHasStarted)
-                {
-                    if (allowedToQuit)
-                    {
-                        SceneManager.LoadScene(0);
-                        return;
-                    }
-                }
-                else
-                {
-                    #if UNITY_WEBGL
-                    SceneManager.LoadScene(0);
-                    #else
-                    Application.Quit();
-                    #endif
-                    return;
-                }
+                DoTheQuitting();
             }
-            
+
             
             if (!gameIsRunning)
             {
                 return;
             }
+            
+            #if UNITY_EDITOR
+            timeSinceGameStarted += Time.deltaTime;
+            #endif
 
             switch (_controlState)
             {
@@ -400,6 +492,10 @@ namespace Scripts.Gameplay
                     {
                         ControlState = ControlStateEnum.AT_DOOR;
                     }
+                    else if (Input.GetButtonDown("joystickBack")) // allows controller users to shut up percival
+                    {
+                        _officeTortoiseHUD.ShutUpButtonPressed();
+                    }
                     RechargeCamThisFrame();
                     break;
                 case ControlStateEnum.DOOR_CLOSED:
@@ -427,15 +523,48 @@ namespace Scripts.Gameplay
         {
             CameraPowerLevel -= (_cameraDrainRatePerSecond * Time.deltaTime);
         }
-
-        private bool ExitCamerasInput => Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.Space);
-
-        private bool ShowCamerasInput => Input.GetKeyDown(KeyCode.UpArrow);
         
-        private bool StartClosingDoorInput => Input.GetKeyDown(KeyCode.Space);
-        private bool KeepDoorClosedInput => Input.GetKey(KeyCode.Space);
+        private bool LeftButtonDown =>
+            Input.GetButtonDown("left") || controllerInput.GetButtonDown(ControlDirection.LEFT);
 
-        private bool TurnAroundInput => Input.GetKeyDown(KeyCode.DownArrow);
+        private bool RightButtonDown =>
+            Input.GetButtonDown("right") || controllerInput.GetButtonDown(ControlDirection.RIGHT);
+
+        private bool DownButtonDown =>
+            Input.GetButtonDown("down") || controllerInput.GetButtonDown(ControlDirection.DOWN);
+
+        private bool ExitCamerasInput => DownButtonDown || Input.GetButtonDown("door");
+        //Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.Space);
+
+        private bool ShowCamerasInput => Input.GetButton("up") || controllerInput.GetButton(ControlDirection.UP);
+        //Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKey(KeyCode.UpArrow);
+
+        private bool StartClosingDoorInput => Input.GetButtonDown("door");
+        //Input.GetKeyDown(KeyCode.Space);
+        private bool KeepDoorClosedInput => Input.GetButton("door");
+        //Input.GetKey(KeyCode.Space);
+
+        
+        
+        private bool TurnAroundInput => DownButtonDown
+                                        || (_controlState != ControlStateEnum.USING_CAMS && 
+                                            (LeftButtonDown || RightButtonDown)
+                                        )
+                                        || (_controlState == ControlStateEnum.LOOKING_BACK &&
+                                            (Input.GetButtonDown("up") || controllerInput.GetButtonDown(ControlDirection.UP)));
+
+        /*
+        private bool TurnAroundInput => Input.GetKeyDown(KeyCode.DownArrow)
+                                        || (_controlState != ControlStateEnum.USING_CAMS && 
+                                            (Input.GetKeyDown(KeyCode.LeftArrow)
+                                             || Input.GetKeyDown(KeyCode.RightArrow))
+                                            )
+                                        || (_controlState == ControlStateEnum.LOOKING_BACK &&
+                                            Input.GetKeyDown(KeyCode.UpArrow));
+                                            */
+
+
+        public bool DoorIsClosed => _controlState == ControlStateEnum.DOOR_CLOSED;
     }
 
 

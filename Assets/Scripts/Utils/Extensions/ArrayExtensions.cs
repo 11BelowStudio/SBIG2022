@@ -129,9 +129,25 @@ namespace Scripts.Utils.Extensions
             {
                 return theseMayBeNull.RemoveNulls();
             }
-            
-            
-            
+
+            /// <summary>
+            /// Simple 'any' wrapper thing for arrays (seeing if anything in the list satisfies a condition)
+            /// </summary>
+            /// <param name="theList">The list that we're applying doThis to</param>
+            /// <param name="checkThis">Condition to check for every item in the list</param>
+            /// <typeparam name="T"></typeparam>
+            /// <returns>True if anything in the list satisfies this condition</returns>
+            public static bool Any<T>(this T[] theList, Predicate<T> checkThis)
+            {
+                for (int i = theList.Length - 1; i >= 0; i--)
+                {
+                    if (checkThis.Invoke(theList[i]))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
 
 
             /// <summary>

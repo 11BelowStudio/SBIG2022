@@ -63,6 +63,25 @@ namespace Scripts.Utils.Extensions
                 }
             }
             
+            /// <summary>
+            /// Simple 'any' wrapper thing for IEnumerables (seeing if anything in the list satisfies a condition)
+            /// but doesn't require using Linq
+            /// </summary>
+            /// <param name="theEnumerable">The IEnumerable that we're applying doThis to</param>
+            /// <param name="checkThis">Condition to check for every item in the list</param>
+            /// <typeparam name="T"></typeparam>
+            /// <returns>True if anything in the list satisfies this condition</returns>
+            public static bool Any<T>(this IEnumerable<T> theEnumerable, Predicate<T> checkThis)
+            {
+                foreach (var item in theEnumerable)
+                {
+                    if (checkThis(item))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
 
         }
         

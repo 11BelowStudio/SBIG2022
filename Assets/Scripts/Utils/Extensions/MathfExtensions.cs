@@ -57,6 +57,17 @@ namespace Scripts.Utils.Extensions
                 return d > 0d ? d : 0d;
             }
 
+            /// <summary>
+            /// returns 0 if f ~= 0, otherwise returns sign(f)
+            /// </summary>
+            /// <param name="f"></param>
+            /// <returns></returns>
+            public static int PosNegZero(this float f)
+            {
+                return UnityEngine.Mathf.Approximately(f, 0) ? 0 : (int)UnityEngine.Mathf.Sign(f);
+            }
+            
+
         }
 
     }

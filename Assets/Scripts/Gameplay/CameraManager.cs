@@ -10,7 +10,7 @@ namespace Scripts.Gameplay
         
         public CameraEnum CurrentCamera => _currentCam;
         
-        [SerializeField] private CameraEnum _currentCam = CameraEnum.A;
+        [SerializeField] private CameraEnum _currentCam = CameraEnum.F;
         
         [SerializeField] private CameraState _camState = CameraState.INACTIVE;
 
@@ -28,9 +28,11 @@ namespace Scripts.Gameplay
 
         public AudioSource cameraChangeAudioSource;
 
+        private ControllerInputListener controlInputs;
+
         private void Awake()
         {
-            
+            controlInputs = ControllerInputListener.Instance;
         }
 
         public event Action<CameraState> OnCameraActiveStateChanged;
@@ -66,6 +68,12 @@ namespace Scripts.Gameplay
 
         public void CameraButtonPressed(CameraEnum newCam)
         {
+            if (newCam == CameraEnum.OFFICE)
+            {
+                Debug.LogError("ERROR! Somehow, CameraButtonPressed got called with 'Office'!!! Setting to 'A' instead.");
+                newCam = CameraEnum.F;
+            }
+            
             var oldCam = _currentCam;
             _currentCam = newCam;
             if (oldCam != newCam)
@@ -79,39 +87,53 @@ namespace Scripts.Gameplay
         {
             if (_camState == CameraState.ACTIVE)
             {
-                if (Input.GetKeyDown(KeyCode.Alpha1))
+                if (Input.GetButtonDown("1"))
                 {
                     CameraButtonPressed(CameraEnum.A);
                 } 
-                else if (Input.GetKeyDown(KeyCode.Alpha2))
+                else if (Input.GetButtonDown("2"))
                 {
                     CameraButtonPressed(CameraEnum.B);
                 } 
-                else if (Input.GetKeyDown(KeyCode.Alpha3))
+                else if (Input.GetButtonDown("3"))
                 {
                     CameraButtonPressed(CameraEnum.C);
                 }
-                else if (Input.GetKeyDown(KeyCode.Alpha4))
+                else if (Input.GetButtonDown("4"))
                 {
                     CameraButtonPressed(CameraEnum.D);
                 }
-                else if (Input.GetKeyDown(KeyCode.Alpha5))
+                else if (Input.GetButtonDown("5"))
                 {
                     CameraButtonPressed(CameraEnum.E);
                 }
-                else if (Input.GetKeyDown(KeyCode.Alpha6))
+                else if (Input.GetButtonDown("6"))
                 {
                     CameraButtonPressed(CameraEnum.F);
                 }
-                else if (Input.GetKeyDown(KeyCode.Alpha7))
+                else if (Input.GetButtonDown("7"))
                 {
                     CameraButtonPressed(CameraEnum.G);
                 }
-                else if (Input.GetKeyDown(KeyCode.Alpha8))
+                else if (Input.GetButtonDown("8"))
                 {
                     CameraButtonPressed(CameraEnum.BRI_AIN);
                 }
+                else if (Input.GetButtonDown("9"))
+                {
+                    CameraButtonPressed(CameraEnum.NUMBER_NINE);
+                }
+                else if (Input.GetButtonDown("left") || controlInputs.GetButtonDown(ControlDirection.LEFT))
+                {
+                    CameraButtonPressed(CurrentCamera.MoveLeft());
+                }
+                else if (Input.GetButtonDown("right") || controlInputs.GetButtonDown(ControlDirection.RIGHT))
+                {
+                    CameraButtonPressed(CurrentCamera.MoveRight());
+                }
             }
         }
+        
+        
     }
 }

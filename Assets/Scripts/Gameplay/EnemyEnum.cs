@@ -7,10 +7,10 @@ namespace Scripts.Gameplay
     public enum EnemyEnum
     {
         TORTELVIS,
-        ESIO_TROT,
+        ESIOTROT,
         KEIN,
         TESTUDO,
-        IDENTIKIT
+        INTRUDER
     }
 
     public static class EnemyEnumMethods
@@ -22,9 +22,9 @@ namespace Scripts.Gameplay
             {
                 EnemyEnum.TORTELVIS => Color.white,
                 EnemyEnum.TESTUDO => Color.red,
-                EnemyEnum.ESIO_TROT => Color.green,
+                EnemyEnum.ESIOTROT => Color.green,
                 EnemyEnum.KEIN => Color.blue,
-                EnemyEnum.IDENTIKIT => Color.cyan,
+                EnemyEnum.INTRUDER => Color.cyan,
                 _ => Color.magenta
             };
         }

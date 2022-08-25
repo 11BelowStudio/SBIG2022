@@ -79,6 +79,21 @@ namespace Scripts.Gameplay
             ShutUpPercival();
         }
 
+        public void ScaleThePercivalDelayToPunishCampers(float scaleBy)
+        {
+            minPercivalDelay *= scaleBy;
+            maxPercivalDelay *= scaleBy;
+            percivalDelayRemaining *= scaleBy;
+            
+            if (!isPercivalAllowedToAppear)
+            {
+                // If percival hasn't been activated yet, we set the delay remaining for Percival to be a single second.
+                percivalDelayRemaining = 1f;
+            }
+            
+            _percivalDisturbance /= scaleBy;
+        }
+
         private void Update()
         {
             if (isPercivalAllowedToAppear && _percivalAudioCoroutine == null)
@@ -115,7 +130,7 @@ namespace Scripts.Gameplay
             _thingThatTellsPercivalToShutUp.PercivalHasStartedSingingAgain();
         }
 
-        public void TheIdendikitHasMoved()
+        public void TheIntruderHasMoved()
         {
             if (minPercivalDelay > 1f)
             {

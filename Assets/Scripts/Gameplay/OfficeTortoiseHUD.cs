@@ -46,7 +46,7 @@ namespace Scripts.Gameplay
             ShutTheFuckUp.gameObject.SetActive(true);
         }
 
-        private void ShutUpButtonPressed()
+        public void ShutUpButtonPressed()
         {
             ShutTheFuckUp.gameObject.SetActive(false);
             ShutTheFuckUpPercival?.Invoke();
