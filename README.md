@@ -2,7 +2,7 @@
 
 By 11BelowStudio
 
-https://11belowstudio.itch.io/one-unspecified-period-of-time-at-kevins-contrived-plot-device-of-a-tortoise-san
+https://11belowstudio.itch.io/one-unspecified-period-of-time-at-kevins
 https://github.com/11BelowStudio/SBIG2022
 
 Kevin would like to congratulate you on your new job (for the next unspecified period of time) here at Kevin's Contrived Plot Device Of A Tortoise Sanctuary!
