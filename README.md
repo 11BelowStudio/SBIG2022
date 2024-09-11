@@ -19,3 +19,8 @@ but I came up with the title first and I don't want to participate in false adve
 
 
 (to quit the game, press the escape key)
+
+----
+
+Originally developed in Unity 2020.3.37f1 on the weekend of the 6th-7th of August 2022.
+Most recently updated to Unity 2022.3.42f1

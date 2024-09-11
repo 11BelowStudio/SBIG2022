@@ -43,6 +43,12 @@ namespace Scripts.Gameplay
         public float DisturbancePerSecond = 1;
 
         [SerializeField] [ReadOnly] private float moveAttemptDelta;
+        /// <summary>
+        /// intended to allow enemies to fail their move attempts sooner
+        /// </summary>
+        [SerializeField]
+        [ReadOnly]
+        private float watchingMoveAttemptDelta;
 
         [SerializeField]
         private List<EnemyPositionStruct> _positions = new List<EnemyPositionStruct>();
@@ -98,11 +104,16 @@ namespace Scripts.Gameplay
 
                 _myCurrentPosition = value;
                 myActualPosition = _positions[value];
-
-                transform.position = myActualPosition.theNode.Position;
+                if (myActualPosition.theNode == null)
+                {
+                    Debug.LogWarning($"{gameObject.name} {nameof(Enemy)} MyCurrentPosition: Node at position {value} of _positions array is null!");
+                    return;
+                }
+                var posNode = myActualPosition.theNode;
+                transform.position = posNode.Position;
 
                 // ReSharper disable once Unity.InefficientPropertyAccess
-                transform.rotation = myActualPosition.theNode.transform.rotation;
+                transform.rotation = posNode.transform.rotation;
             }
         }
         
@@ -146,6 +157,9 @@ namespace Scripts.Gameplay
         // has this not yet failed a move attempt due to being watched since the last time its 'is watched' changed?
         private bool notYetFailedAttemptFromBeingWatched = true;
 
+        [SerializeField]
+        private GameObject myVisuals;
+
         void ScaleTheIntervalsToPunishCampers(float scaleBy)
         {
             minTimeForMoveAttempt *= scaleBy;
@@ -160,6 +174,7 @@ namespace Scripts.Gameplay
 
         private void Awake()
         {
+            myVisuals.SetActive(true);
             _myCurrentPosition = 0;
             InitializeValidate();
             intruderAltMoveDelta = NextIntruderAltMoveEventTimer;
@@ -178,8 +193,8 @@ namespace Scripts.Gameplay
 
             gm = GameManager.Instance;
 
-            CameraManager.Instance.OnActiveCameraChanged += _AmIBeingWatched;
-            CameraManager.Instance.OnCameraActiveStateChanged += _AmIBeingWatched;
+            CameraManager.Instance.OnActiveCameraChanged += _Update_AmIBeingWatched_Event;
+            CameraManager.Instance.OnCameraActiveStateChanged += _Update_AmIBeingWatched_Event;
 
             gm.DoorIsClosedGoAwayGrr += DoorHasJustBeenClosed;
             gm.GameFinishedOneShot += StopAI;
@@ -263,7 +278,7 @@ namespace Scripts.Gameplay
             isStarted = true;
         }
 
-        private void _AmIBeingWatched<T>(T _ = default)
+        private void _Update_AmIBeingWatched_Event<T>(T _ = default)
         {
             AmIBeingWatched();
         }
@@ -274,10 +289,12 @@ namespace Scripts.Gameplay
             
             if (myActualPosition.CamEnum == CameraEnum.OFFICE)
             {
-                _isBeingWatched = (gm.ControlState == ControlStateEnum.AT_DOOR 
-                                   || gm.ControlState == ControlStateEnum.LOOKING_BACK
-                                   || (gm.ControlState == ControlStateEnum.USING_CAMS && (CameraManager.Instance.CurrentCamera == CameraEnum.NUMBER_NINE))
-                                   );
+                _isBeingWatched = (
+                    gm.ControlState == ControlStateEnum.AT_DOOR 
+                    || gm.ControlState == ControlStateEnum.LOOKING_BACK
+                    || (gm.ControlState == ControlStateEnum.USING_CAMS
+                        && (CameraManager.Instance.CurrentCamera == CameraEnum.NUMBER_NINE))
+                );
             }
             else
             {
@@ -291,6 +308,7 @@ namespace Scripts.Gameplay
             if (oldBeingWatched != _isBeingWatched)
             {
                 notYetFailedAttemptFromBeingWatched = (whoIs != EnemyEnum.INTRUDER && !IsInAPositionThatIsCloseToTheDoor);
+                watchingMoveAttemptDelta = moveAttemptDelta;
                 OnBeingWatchedChanged?.Invoke(_isBeingWatched);
             }
         }
@@ -346,14 +364,28 @@ namespace Scripts.Gameplay
             {
                 bool doorIsClosed = GameManager.Instance.DoorIsClosed;
 
+                float moveAttemptDecrement = Time.deltaTime
+                                    * (doorIsClosed ? 1.5f : 1f)
+                                    * (IsInAPositionThatIsCloseToTheDoor ? 1.5f : 1f);
+
+                moveAttemptDelta -= moveAttemptDecrement;
+
+                if (_isBeingWatched && notYetFailedAttemptFromBeingWatched)
+                {
+                    watchingMoveAttemptDelta -= moveAttemptDecrement * 2f;
+                }
+                
+                /*
                 moveAttemptDelta -= Time.deltaTime
                                     * (doorIsClosed ? 1.5f : 1f)
                                     * (IsInAPositionThatIsCloseToTheDoor ? 1.5f : 1f)
                                     * ((_isBeingWatched && notYetFailedAttemptFromBeingWatched) ? 2f : 1f);
+                */
                 
-                if (moveAttemptDelta <= 0f)
+                if (moveAttemptDelta <= 0f || watchingMoveAttemptDelta <= 0f)
                 {
                     moveAttemptDelta = NextMoveEventTimer;
+                    watchingMoveAttemptDelta = Mathf.Infinity;
 
                     if (_isBeingWatched)
                     {
@@ -547,8 +579,8 @@ namespace Scripts.Gameplay
             IncrementEnemyAILevel -= ShouldIIncrementMyAiLevel;
             if (CameraManager.TryGetInstance(out CameraManager theCamManager))
             {
-                theCamManager.OnActiveCameraChanged -= _AmIBeingWatched;
-                theCamManager.OnCameraActiveStateChanged -= _AmIBeingWatched;
+                theCamManager.OnActiveCameraChanged -= _Update_AmIBeingWatched_Event;
+                theCamManager.OnCameraActiveStateChanged -= _Update_AmIBeingWatched_Event;
             }
         }
 
@@ -558,6 +590,10 @@ namespace Scripts.Gameplay
 
             foreach (var pos in _positions)
             {
+                if (pos.theNode == null)
+                {
+                    continue;
+                }
                 pos.theNode.OnDrawGizmos();
                 
                 Gizmos.DrawLine(pos.theNode.Position, _positions[pos.nextPos].theNode.Position);
