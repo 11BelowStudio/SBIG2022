@@ -6477,6 +6477,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 4294967295
       objectReference: {fileID: 0}
+    - target: {fileID: 1189268056129661631, guid: 9d346059965eefc428ea3bea612fed54, type: 3}
+      propertyPath: ShouldIFaceCamera
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1258900349385825205, guid: 9d346059965eefc428ea3bea612fed54, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.9717697
@@ -6510,20 +6514,28 @@ PrefabInstance:
       value: 0.16189916
       objectReference: {fileID: 0}
     - target: {fileID: 2685191079024372503, guid: 9d346059965eefc428ea3bea612fed54, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.177
+      objectReference: {fileID: 0}
+    - target: {fileID: 2685191079024372503, guid: 9d346059965eefc428ea3bea612fed54, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9258165
+      value: 0.9570289
       objectReference: {fileID: 0}
     - target: {fileID: 2685191079024372503, guid: 9d346059965eefc428ea3bea612fed54, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.275457
+      value: -0.2198285
       objectReference: {fileID: 0}
     - target: {fileID: 2685191079024372503, guid: 9d346059965eefc428ea3bea612fed54, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.24807182
+      value: 0.18433225
       objectReference: {fileID: 0}
     - target: {fileID: 2685191079024372503, guid: 9d346059965eefc428ea3bea612fed54, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.07380849
+      value: 0.042340916
+      objectReference: {fileID: 0}
+    - target: {fileID: 2685191079024372503, guid: 9d346059965eefc428ea3bea612fed54, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2764678971441184671, guid: 9d346059965eefc428ea3bea612fed54, type: 3}
       propertyPath: m_LocalRotation.w
@@ -7568,14 +7580,6 @@ PrefabInstance:
     - target: {fileID: 6836786107672005753, guid: 518054fa20e417c4d834fb532ce0736b, type: 3}
       propertyPath: m_IsActive
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6864349473816447123, guid: 518054fa20e417c4d834fb532ce0736b, type: 3}
-      propertyPath: m_Convex
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6864349473816447123, guid: 518054fa20e417c4d834fb532ce0736b, type: 3}
-      propertyPath: m_CookingOptions
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7670258494435939911, guid: 518054fa20e417c4d834fb532ce0736b, type: 3}
       propertyPath: m_StaticEditorFlags
