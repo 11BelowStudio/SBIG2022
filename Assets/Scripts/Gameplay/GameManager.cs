@@ -276,8 +276,9 @@ namespace Scripts.Gameplay
 
         private IEnumerator EnemyStarterCoroutine()
         {
+            yield return new WaitForSeconds(5f);
             Enemy.PleaseToStartThisEnemy(EnemyEnum.TORTELVIS);
-            yield return new WaitForSeconds(10f);
+            yield return new WaitForSeconds(5f);
             Enemy.PleaseToStartThisEnemy(EnemyEnum.ESIOTROT);
             yield return new WaitForSeconds(10f);
             Enemy.PleaseToStartThisEnemy(EnemyEnum.TESTUDO);
