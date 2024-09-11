@@ -22,8 +22,9 @@ turns into <br> when read
 -->
 <credits>
 <credit>
-This game was developed by 11BelowStudio
-for the So Bad It's Good Jam 2022
+This game was developed by 11BelowStudio for the So Bad It's Good Jam 2022
+https://11belowstudio.itch.io/one-unspecified-period-of-time-at-kevins
+https://github.com/11BelowStudio/SBIG2022
 </credit>
 </credits>
 <assets>
@@ -48,8 +49,7 @@ For example:
 <asset>
 <assetname>Tortoise - Turtle</assetname>
 <author>Daniel Zuleta Art</author>
-<from>https://sketchfab.com/3d-models/ 
-tortoise-turtle-031b140380654dedb3b18e7cdd8c190c</from>
+<from>https://sketchfab.com/3d-models/ tortoise-turtle-031b140380654dedb3b18e7cdd8c190c</from>
 <license>CC-BY-4.0</license>
 </asset>
 <asset>
@@ -67,8 +67,7 @@ tortoise-turtle-031b140380654dedb3b18e7cdd8c190c</from>
 <asset>
 <assetname>Dead Turtle Table</assetname>
 <author>Duznot</author>
-<from>https://sketchfab.com/3d-models/
-dead-turtle-table-854313a3ea1d4e6184b33e4b91b333e9</from>
+<from>https://sketchfab.com/3d-models/dead-turtle-table-854313a3ea1d4e6184b33e4b91b333e9</from>
 <license>CC-BY-4.0</license>
 </asset>
 <asset>
@@ -80,29 +79,25 @@ dead-turtle-table-854313a3ea1d4e6184b33e4b91b333e9</from>
     <asset>
         <assetname>DevTex: Prototyping Textures</assetname>
         <author>GIB Games</author>
-        <from>https://assetstore.unity.com/packages/2d/textures-materials/
-devtex-prototyping-textures-176107</from>
+        <from>https://assetstore.unity.com/packages/2d/textures-materials/devtex-prototyping-textures-176107</from>
         <license>Standard Unity Asset Store EULA</license>
     </asset>
     <asset>
         <assetname>Snaps Prototype | Office</assetname>
         <author>Unity Technologies</author>
-        <from>https://assetstore.unity.com/packages/3d/environments/
-snaps-prototype-office-137490</from>
+        <from>https://assetstore.unity.com/packages/3d/environments/snaps-prototype-office-137490</from>
         <license>Standard Unity Asset Store EULA</license>
     </asset>
     <asset>
         <assetname>Snaps Prototype | Sci-Fi / Industrial</assetname>
         <author>Unity Technologies</author>
-        <from>https://assetstore.unity.com/packages/3d/environments/
-sci-fi/snaps-prototype-sci-fi-industrial-136759</from>
+        <from>https://assetstore.unity.com/packages/3d/environments/sci-fi/snaps-prototype-sci-fi-industrial-136759</from>
         <license>Standard Unity Asset Store EULA</license>
     </asset>
     <asset>
         <assetname>Pillow</assetname>
         <author>khanhnguyen1189</author>
-        <from>https://sketchfab.com/3d-models/
-pillow-ffedc1b62f8d485bb19392c6d33fb71d</from>
+        <from>https://sketchfab.com/3d-models/pillow-ffedc1b62f8d485bb19392c6d33fb71d</from>
         <license>CC-BY-4.0</license>
     </asset>
     <asset>
@@ -129,6 +124,12 @@ pillow-ffedc1b62f8d485bb19392c6d33fb71d</from>
         <from>https://incompetech.com/music/royalty-free/music.html</from>
         <license>CC-BY-4.0</license>
     </asset>
+	<asset>
+<assetname>Better Minimal WebGL Template</assetname>
+<author>Sean S. LeBlanc</author>
+<from>https://github.com/seleb/Better-Minimal-WebGL-Template</from>
+<license>MIT</license>
+</asset>
 </assets>
 <licenses>
 <!--
@@ -164,6 +165,17 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 </licensetext>
 -->
+<licensetext>
+&lt;b&gt;Better Minimal WebGL Template&lt;/b&gt;
+
+Copyright (c) 2020 Sean S. LeBlanc
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+</licensetext>
 </licenses>
 <others>
 <!--
@@ -171,17 +183,17 @@ For other bits of credits that don't neatly fit in elsewhere.
 -->
 <other>
 Developed using Unity 2020.3.37f1
+(Most recently updated on Unity 2022.3.42f1)
 </other>
 <other>
 Featuring Tortelvis as himself
-(via a few samples from Dread Zeppelin - Black Dog and Dread Zeppelin - Stir It Up)
+(via a few samples from Dread Zeppelin - Black Dog and Dread Zeppelin - Stir It Up, used wihout permission :p)
 </other>
 <other>
 This is totally not a ripoff of One Night At Flumpty's 2. no bamboozle.
 </other>
 <other>
-This game was made entirely during the weekend of the 6th-7th of august,
-and the cheap energy drinks at tesco are surprisingly potent.
+This game was originally made during the weekend of the 6th-7th of August 2022. The cheap energy drinks at tesco are surprisingly potent.
 </other>
 <other>
 Somehow, this game came in 9th place overall during the 2022 So Bad It's Good Jam (and #1 for the 'modifier' category)!

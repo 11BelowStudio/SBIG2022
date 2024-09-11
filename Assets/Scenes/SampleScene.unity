@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1356,7 +1355,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: f1b5a4bf99e41f94cb0ba1a4bb878b75, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 9238bf0132d2fe84f94362c479637ede, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -8120,17 +8119,69 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4452783897254118059, guid: 24a8d61b7e696264e9424111daf76b2b, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4452783897254118059, guid: 24a8d61b7e696264e9424111daf76b2b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5561495060015247861, guid: 24a8d61b7e696264e9424111daf76b2b, type: 3}
       propertyPath: manager
       value: 
       objectReference: {fileID: 36410001}
+    - target: {fileID: 6270860546117197646, guid: 24a8d61b7e696264e9424111daf76b2b, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6270860546117197646, guid: 24a8d61b7e696264e9424111daf76b2b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6527548777714297244, guid: 24a8d61b7e696264e9424111daf76b2b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7065929289502402534, guid: 24a8d61b7e696264e9424111daf76b2b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7515505783524237231, guid: 24a8d61b7e696264e9424111daf76b2b, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7631454221166774495, guid: 24a8d61b7e696264e9424111daf76b2b, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7631454221166774495, guid: 24a8d61b7e696264e9424111daf76b2b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7677417929087821768, guid: 24a8d61b7e696264e9424111daf76b2b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7857152625255707042, guid: 24a8d61b7e696264e9424111daf76b2b, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7857152625255707042, guid: 24a8d61b7e696264e9424111daf76b2b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7857152625255707042, guid: 24a8d61b7e696264e9424111daf76b2b, type: 3}
+      propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8068616905394785226, guid: 24a8d61b7e696264e9424111daf76b2b, type: 3}
       propertyPath: m_Name
       value: HUDCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 8068616905394785226, guid: 24a8d61b7e696264e9424111daf76b2b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
