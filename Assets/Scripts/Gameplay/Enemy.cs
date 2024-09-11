@@ -157,6 +157,9 @@ namespace Scripts.Gameplay
         // has this not yet failed a move attempt due to being watched since the last time its 'is watched' changed?
         private bool notYetFailedAttemptFromBeingWatched = true;
 
+        [SerializeField]
+        private GameObject myVisuals;
+
         void ScaleTheIntervalsToPunishCampers(float scaleBy)
         {
             minTimeForMoveAttempt *= scaleBy;
@@ -171,6 +174,7 @@ namespace Scripts.Gameplay
 
         private void Awake()
         {
+            myVisuals.SetActive(true);
             _myCurrentPosition = 0;
             InitializeValidate();
             intruderAltMoveDelta = NextIntruderAltMoveEventTimer;
@@ -586,6 +590,10 @@ namespace Scripts.Gameplay
 
             foreach (var pos in _positions)
             {
+                if (pos.theNode == null)
+                {
+                    continue;
+                }
                 pos.theNode.OnDrawGizmos();
                 
                 Gizmos.DrawLine(pos.theNode.Position, _positions[pos.nextPos].theNode.Position);

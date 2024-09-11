@@ -126,6 +126,7 @@ MonoBehaviour:
     isAttackPos: 0
     nextPosIsAttackPos: 0
   _isBeingWatched: 0
+  myVisuals: {fileID: 6858237002498083671}
 --- !u!82 &7678044809778198084
 AudioSource:
   m_ObjectHideFlags: 0
@@ -240,7 +241,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1906782771136428943
 Transform:
   m_ObjectHideFlags: 0
