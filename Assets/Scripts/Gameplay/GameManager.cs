@@ -220,7 +220,7 @@ namespace Scripts.Gameplay
             myAudioSource.PlayOneShot(kevinWarpsYouNoise);
             yield return new WaitForSeconds(0.961f);
             // ReSharper disable once PossibleNullReferenceException
-            Camera.main.transform.position = BanishmentPosition.Position;
+            Camera.main.transform.SetPositionAndRotation(BanishmentPosition.Position, BanishmentPosition.transform.rotation);
             Camera.main.fieldOfView = 60f;
             yield return new WaitForSeconds(1f);
             myAudioSource.clip = badEndMusic;
