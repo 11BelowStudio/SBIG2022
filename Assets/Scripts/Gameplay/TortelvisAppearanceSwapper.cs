@@ -14,9 +14,11 @@ namespace Scripts.Gameplay
     [RequireComponent(typeof(Enemy))]
     public class TortelvisAppearanceSwapper: MonoBehaviour
     {
-        [SerializeField] private List<GameObject> tortelvises = new List<GameObject>();
+        [SerializeField] private List<Material> tortelvises = new List<Material>();
 
-        [SerializeField] [ReadOnly] private GameObject currentTortelvis;
+        [SerializeField] [ReadOnly] private Material currentTortelvis;
+
+        [SerializeField] private Renderer tortelvisRenderer;
         
         [SerializeField] private Enemy tortelvisHimself;
 
@@ -29,12 +31,9 @@ namespace Scripts.Gameplay
 
         private void Initialize()
         {
-            foreach (var tort in tortelvises)
-            {
-                tort.SetActive(false);
-            }
+            
             currentTortelvis = tortelvises[0];
-            currentTortelvis.gameObject.SetActive(true);
+            ShowTortelvis();
         }
 
         private void OnValidate()
@@ -57,12 +56,17 @@ namespace Scripts.Gameplay
             {
                 return;
             }
-            currentTortelvis.SetActive(false);
+            //currentTortelvis.SetActive(false);
 
             currentTortelvis = tortelvises.SwapTheseTwoAndGet(
                 Random.Range(1, tortelvises.Count)
                 );
-            currentTortelvis.SetActive(true);
+            ShowTortelvis();
+        }
+
+        private void ShowTortelvis()
+        {
+            tortelvisRenderer.material = currentTortelvis;
         }
     }
 }
